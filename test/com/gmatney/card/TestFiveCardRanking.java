@@ -43,6 +43,10 @@ public class TestFiveCardRanking extends TestCase{
 	public void tearDown() throws Exception {
 	}
 	
+	public void testHasFullHouse(){
+		
+	}
+	
 	public void testHasFlush(){
 		FiveCardRanking r = new FiveCardRanking();
 
