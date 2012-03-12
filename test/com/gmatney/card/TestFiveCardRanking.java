@@ -3,8 +3,6 @@
  */
 package com.gmatney.card;
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
@@ -13,16 +11,13 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import com.gmatney.playingcard.Card;
-import com.gmatney.playingcard.CardNumber;
-import com.gmatney.playingcard.CardSuit;
-import com.gmatney.poker.hand.FiveCardHand;
 import com.gmatney.poker.hand.FiveCardRanking;
 import com.gmatney.poker.hand.Rank;
 
+//TODO override assert logic so that logging output is more verbose for better debugging.
 /**
+ * This is the MAIN proof area of this exercise.
  * @author gmatney
- *
  */
 public class TestFiveCardRanking extends TestCase{
 	private static Logger log = Logger.getLogger(TestFiveCardRanking.class);
@@ -40,6 +35,7 @@ public class TestFiveCardRanking extends TestCase{
 		ranker = null;
 	}
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		log.info("##############################################################");
@@ -49,6 +45,7 @@ public class TestFiveCardRanking extends TestCase{
 		ranker = new FiveCardRanking();
 	}
 
+	@Override
 	@After
 	public void tearDown() throws Exception {
 		log.info("# tearDown "+this.getName()+"\n\n");
@@ -129,8 +126,8 @@ public class TestFiveCardRanking extends TestCase{
 				,ranker.hasStraightFlush(FiveCardSamples.getStraightNOTWrapAroundFalse()));
 		assertTrue("This was a StraightFlush: "
 				,ranker.hasStraightFlush(FiveCardSamples.getStraightFlushLowestClub()));
-
-	}	
+	}
+	
 	public void testHasFourOfAKind(){
 		assertFalse("This was not a FourOfAKind: "
 				,ranker.hasFourOfAKind(FiveCardSamples.getTwoPairAA55()));
@@ -188,7 +185,6 @@ public class TestFiveCardRanking extends TestCase{
 				,ranker.hasStraight(FiveCardSamples.getFourOfAKindAceSequentialHavingKing()));
 	}
 	
-	//TODO override assert logic so that logging output is more verbose for better debugging.
 	public void testHasThreeOfAKind(){
 		assertFalse("The Ranking System inaccurately said this had three of a kind"
 				,ranker.hasThreeOfAKind(FiveCardSamples.getTwoPairAA55()));

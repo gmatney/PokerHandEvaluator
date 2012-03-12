@@ -1,6 +1,8 @@
 package com.gmatney.poker.hand;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -40,6 +42,7 @@ public class FiveCardHand implements Hand{
 			log.debug("Card "+card.getShortName()+" was not in the hand");
 		}
 	}
+	
 	public void addCard(Card card){
 		if(cards==null){
 			cards = new ArrayList<Card>();
@@ -68,37 +71,29 @@ public class FiveCardHand implements Hand{
 	}
 
 	@Override
-	public Rank getHandRank() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getHandValue() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-
-	@Override
 	public boolean isHandValid() {
-		log.debug("Validating Hand");
-		boolean isValid = true;
+		log.debug("Validating Hand - "+this);
+		if(cards==null){
+			return false;
+		}
 		if(cards.size() != NUMBER_OF_CARDS){
 			log.info("HAND INVALID: Incoming hand does not have exactly "
 					+NUMBER_OF_CARDS
 					+" cards. It has "
 					+cards.size()
 			);
-			isValid=false;
+			return false;
 		}
-		//TODO could put in interface
-		
-		return isValid;
+		Set<Card> set = new HashSet<Card>(cards);
+		if(set.size() < cards.size()  ){
+			log.info("There was at least 1 duplicate of a card!");
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * 
+	 * Sample output: (AC,AD,7H,5S,4S) 
 	 */
 	@Override
 	public String toString() {
@@ -113,6 +108,7 @@ public class FiveCardHand implements Hand{
 		sb.append(")");
 		return sb.toString();
 	}
+	
 	@Override
 	public ArrayList<CardNumber> getNumberValues() {
 		ArrayList<CardNumber> numbers = new ArrayList<CardNumber>();
@@ -121,6 +117,7 @@ public class FiveCardHand implements Hand{
 		}
 		return numbers;
 	}
+	
 	@Override
 	public ArrayList<CardSuit> getSuitValues() {
 		ArrayList<CardSuit> suits = new ArrayList<CardSuit>();
@@ -129,6 +126,7 @@ public class FiveCardHand implements Hand{
 		}
 		return suits;
 	}
+	
 	@Override
 	/**
 	 * Will add the cards in this hand to the current hand.
@@ -139,6 +137,7 @@ public class FiveCardHand implements Hand{
 			this.cards.add(c);
 		}		
 	}
+	
 	@Override
 	/**
 	 * Will remove any of the following cards from the current hand.
@@ -150,6 +149,7 @@ public class FiveCardHand implements Hand{
 		}
 		
 	}
+	
 	@Override
 	public Hand getSubHandHavingNumber(CardNumber cn) {
 		if(cn==null){
@@ -179,9 +179,5 @@ public class FiveCardHand implements Hand{
 		}
 		return subHand;
 	}
-	
-	
-	
-	//TODO Have my own kind of Exceptions
 	
 }

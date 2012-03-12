@@ -7,13 +7,6 @@ import com.gmatney.playingcard.CardSuit;
 
 public interface Hand {
 	public ArrayList<Card> getCards();
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public int getHandValue();
-	public Rank getHandRank();
 	public boolean isHandValid();
 	public void setCards(ArrayList<Card> cards);
 	public ArrayList<CardNumber> getNumberValues();
@@ -23,6 +16,5 @@ public interface Hand {
 	public void removeHand(Hand h);
 	public void addHand(Hand h);
 	public Hand getSubHandHavingNumber(CardNumber cn);
-	public Hand getSubHandHavingSuit(CardSuit cs);
-	
+	public Hand getSubHandHavingSuit(CardSuit cs);	
 }

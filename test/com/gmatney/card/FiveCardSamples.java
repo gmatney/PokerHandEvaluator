@@ -1,7 +1,5 @@
 package com.gmatney.card;
 
-import java.util.ArrayList;
-
 import com.gmatney.playingcard.Card;
 import com.gmatney.playingcard.CardNumber;
 import com.gmatney.playingcard.CardSuit;

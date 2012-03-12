@@ -14,7 +14,6 @@ import com.gmatney.playingcard.Card;
 import com.gmatney.playingcard.CardNumber;
 import com.gmatney.playingcard.CardSuit;
 import com.gmatney.poker.hand.FiveCardHand;
-import com.gmatney.poker.hand.FiveCardRanking;
 
 /**
  * @author gmatney
@@ -25,6 +24,7 @@ public class TestFiveCardHand extends TestCase {
 	/**
 	 * @throws java.lang.Exception
 	 */
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		System.out.println("##############################################################");

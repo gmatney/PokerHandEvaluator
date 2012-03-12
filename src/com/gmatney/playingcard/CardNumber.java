@@ -1,6 +1,5 @@
 package com.gmatney.playingcard;
 
-
 public enum CardNumber {
     	ACE,
     	TWO,

@@ -6,5 +6,5 @@ package com.gmatney.main;
  *
  */
 public class TestEverything {
-
+	//TODO use juite suites to organize extended functionality
 }

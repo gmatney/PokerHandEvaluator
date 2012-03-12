@@ -9,12 +9,6 @@ public class Card implements Comparable<Card>{
 	private CardColor color;
 	private String alternativeName;
 	
-	/**
-	 * @param number
-	 * @param suit
-	 * @param color
-	 * @param alternativeName
-	 */
 	public Card(CardNumber number, CardSuit suit, CardColor color,
 			String alternativeName) {
 		super();
@@ -24,71 +18,44 @@ public class Card implements Comparable<Card>{
 		this.alternativeName = alternativeName;
 	}
 	
-	/**
-	 * @param number
-	 * @param suit
-	 */
 	public Card(CardNumber number, CardSuit suit) {
 		super();
 		this.number = number;
 		this.suit = suit;
 	}
 
-	/**
-	 * @return the color
-	 */
 	public CardColor getColor() {
 		return color;
 	}
-	/**
-	 * @param color the color to set
-	 */
+
 	public void setColor(CardColor color) {
 		this.color = color;
 	}
-	/**
-	 * @return the alternativeName
-	 */
+
 	public String getAlternativeName() {
 		return alternativeName;
 	}
-	/**
-	 * @param alternativeName the alternativeName to set
-	 */
+
 	public void setAlternativeName(String alternativeName) {
 		this.alternativeName = alternativeName;
 	}
-	/**
-	 * @return the number
-	 */
+
 	public CardNumber getNumber() {
 		return number;
 	}
-	/**
-	 * @param number the number to set
-	 */
+
 	public void setNumber(CardNumber number) {
 		this.number = number;
 	}
-	/**
-	 * @return the suit
-	 */
+
 	public CardSuit getSuit() {
 		return suit;
 	}
-	/**
-	 * @param suit the suit to set
-	 */
+
 	public void setSuit(CardSuit suit) {
 		this.suit = suit;
 	}
 
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -101,9 +68,6 @@ public class Card implements Comparable<Card>{
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -136,17 +100,11 @@ public class Card implements Comparable<Card>{
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return number + " of " + suit + "s";
 	}
-	
-	
-	
-	
+		
 	public String getShortName(){
 		return CardName.getShortName(this);
 	}
@@ -163,6 +121,4 @@ public class Card implements Comparable<Card>{
 		return 1;
 
 	}
-	
-	
 }

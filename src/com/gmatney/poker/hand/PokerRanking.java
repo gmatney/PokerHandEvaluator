@@ -94,8 +94,7 @@ public abstract class PokerRanking implements Ranking{
 		}
 		log.trace("Number of cards in Hand: "+cards.size());
 		Set<CardNumber> set = new HashSet<CardNumber>(hand.getNumberValues());
-		for (CardNumber num : set){
-			//See how many of thhas number there are 
+		for (CardNumber num : set){ 
 			int n = Collections.frequency(hand.getNumberValues(),num);
 			log.trace("There are "+n+" '"+num+"'s");
 			if(n>3){return true;}

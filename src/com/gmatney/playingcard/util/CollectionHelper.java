@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import com.gmatney.playingcard.CardSuit;
 
-
 public class CollectionHelper {
 	private static Logger log = Logger.getLogger(CollectionHelper.class);
 	

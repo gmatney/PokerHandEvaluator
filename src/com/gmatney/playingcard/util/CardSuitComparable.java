@@ -2,28 +2,23 @@ package com.gmatney.playingcard.util;
 
 import com.gmatney.playingcard.CardSuit;
 
+/**
+ * Override the default ENUM ranking for CardSuit
+ * Could be used in other games, as some Ranking rules require suit order  
+ * @author gmatney
+ *
+ */
 public class CardSuitComparable  implements Comparable<CardSuitComparable> {
 	CardSuit cardSuit;
-
 	
-	
-	/**
-	 * @return the cardSuit
-	 */
 	public CardSuit getCardSuit() {
 		return cardSuit;
 	}
 
-	/**
-	 * @param cardSuit the cardSuit to set
-	 */
 	public void setCardSuit(CardSuit cardSuit) {
 		this.cardSuit = cardSuit;
 	}
 
-	/**
-	 * @param cardSuit
-	 */
 	public CardSuitComparable(CardSuit cardSuit) {
 		super();
 		this.cardSuit = cardSuit;

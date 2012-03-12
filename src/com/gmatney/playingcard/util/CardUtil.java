@@ -14,8 +14,6 @@ public class CardUtil {
 	 * 
 	 * If unknown or null, returns -1
 	 * 
-	 * @param cn
-	 * @return
 	 */
 	//TODO implementation which can specify ace high or low
 	public static int getCardNumberValue(CardNumber cn){
