@@ -129,9 +129,58 @@ public class FiveCardHand implements Hand{
 		}
 		return suits;
 	}
+	@Override
+	/**
+	 * Will add the cards in this hand to the current hand.
+	 * It will NOT ignore duplicates. (some games might be ok with dups)
+	 */
+	public void addHand(Hand h) {
+		for(Card c: h.getCards()){
+			this.cards.add(c);
+		}		
+	}
+	@Override
+	/**
+	 * Will remove any of the following cards from the current hand.
+	 * It is okay if the current hand does not have the card.
+	 */
+	public void removeHand(Hand h) {
+		for(Card c: h.getCards()){
+			this.cards.remove(c);
+		}
+		
+	}
+	@Override
+	public Hand getSubHandHavingNumber(CardNumber cn) {
+		if(cn==null){
+			return null;
+		}
+		FiveCardHand subHand = new FiveCardHand();
+		for(Card c: cards){
+			if(c.getNumber().equals(cn))
+			{
+				subHand.addCard(c);
+			}
+		}
+		return subHand;
+	}
+	
+	@Override
+	public Hand getSubHandHavingSuit(CardSuit cs) {
+		if(cs==null){
+			return null;
+		}
+		FiveCardHand subHand = new FiveCardHand();
+		for(Card c: cards){
+			if(c.getNumber().equals(cs))
+			{
+				subHand.addCard(c);
+			}
+		}
+		return subHand;
+	}
 	
 	
-
 	
 	//TODO Have my own kind of Exceptions
 	

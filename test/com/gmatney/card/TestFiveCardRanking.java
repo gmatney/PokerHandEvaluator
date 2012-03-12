@@ -17,6 +17,7 @@ import com.gmatney.playingcard.CardNumber;
 import com.gmatney.playingcard.CardSuit;
 import com.gmatney.poker.hand.FiveCardHand;
 import com.gmatney.poker.hand.FiveCardRanking;
+import com.gmatney.poker.hand.FiveCardSamples;
 
 /**
  * @author gmatney
@@ -43,47 +44,44 @@ public class TestFiveCardRanking extends TestCase{
 	public void tearDown() throws Exception {
 	}
 	
+	public void testHasStraightFlush(){
+		FiveCardRanking r = new FiveCardRanking();
+
+	}	
+	public void testHasFourOfAKind(){
+		FiveCardRanking r = new FiveCardRanking();
+		assertFalse("This was not a FourOfAKind: "
+				,r.hasFourOfAKind(FiveCardSamples.getTwoPairAA55()));
+		assertFalse("This was not a FourOfAKind: "
+				,r.hasFourOfAKind(FiveCardSamples.getThreeOfAKind7()));
+		assertFalse("This was not a FourOfAKind: "
+				,r.hasFourOfAKind(FiveCardSamples.getFullHouseLow()));
+		assertTrue("This was a FourOfAKind: "
+				,r.hasFourOfAKind(FiveCardSamples.getFourOfAKindAceSequentialHavingKing()));
+	}
+	
 	public void testHasFullHouse(){
-		
+		FiveCardRanking r = new FiveCardRanking();		
+		assertFalse("This was not a FullHouse: ",
+				r.hasFullHouse(FiveCardSamples.getThreeOfAKindNotFullHouse()));
+		assertFalse("This was not a FullHouse: ",
+				r.hasFullHouse(FiveCardSamples.getTwoPairNoHouse()));
+		assertTrue("This was a FullHouse: "
+				,r.hasFullHouse(FiveCardSamples.getFullHouseHigh()));
+		assertTrue("This was a FullHouse: "
+				,r.hasFullHouse(FiveCardSamples.getFullHouseLow()));
 	}
 	
 	public void testHasFlush(){
 		FiveCardRanking r = new FiveCardRanking();
-
-		//Hands to test
-		FiveCardHand notAFlush1 = new FiveCardHand();
-		FiveCardHand notAFlush2 = new FiveCardHand();
-		FiveCardHand diamondFlush = new FiveCardHand();
-		FiveCardHand heartFlush = new FiveCardHand();
-		
-		notAFlush1.addCard(new Card(CardNumber.ACE, CardSuit.CLUB));
-		notAFlush1.addCard(new Card(CardNumber.TWO, CardSuit.DIAMOND));
-		notAFlush1.addCard(new Card(CardNumber.THREE, CardSuit.HEART));
-		notAFlush1.addCard(new Card(CardNumber.FOUR, CardSuit.SPADE));
-		notAFlush1.addCard(new Card(CardNumber.FIVE, CardSuit.SPADE));
-
-		notAFlush2.addCard(new Card(CardNumber.TEN, CardSuit.CLUB));
-		notAFlush2.addCard(new Card(CardNumber.KING, CardSuit.SPADE));
-		notAFlush2.addCard(new Card(CardNumber.QUEEN, CardSuit.HEART));
-		notAFlush2.addCard(new Card(CardNumber.JACK, CardSuit.SPADE));
-		notAFlush2.addCard(new Card(CardNumber.TEN, CardSuit.SPADE));
-		
-		diamondFlush.addCard(new Card(CardNumber.ACE, CardSuit.DIAMOND));
-		diamondFlush.addCard(new Card(CardNumber.TWO, CardSuit.DIAMOND));
-		diamondFlush.addCard(new Card(CardNumber.QUEEN, CardSuit.DIAMOND));
-		diamondFlush.addCard(new Card(CardNumber.JACK, CardSuit.DIAMOND));
-		diamondFlush.addCard(new Card(CardNumber.SEVEN, CardSuit.DIAMOND));
-		
-		heartFlush.addCard(new Card(CardNumber.ACE, CardSuit.HEART));
-		heartFlush.addCard(new Card(CardNumber.KING, CardSuit.HEART));
-		heartFlush.addCard(new Card(CardNumber.QUEEN, CardSuit.HEART));
-		heartFlush.addCard(new Card(CardNumber.JACK, CardSuit.HEART));
-		heartFlush.addCard(new Card(CardNumber.EIGHT, CardSuit.HEART));
-		
-		assertFalse("This was not a flush",r.hasFlush(notAFlush2));
-		assertFalse("This was not a flush",r.hasFlush(notAFlush1));
-		assertTrue("This was a flush of diamonds",r.hasFlush(diamondFlush));
-		assertTrue("This was a flush of heart",r.hasFlush(heartFlush));
+		assertFalse("This was not a flush"
+				,r.hasFlush(FiveCardSamples.getThreeOfAKind7()));
+		assertFalse("This was not a flush"
+				,r.hasFlush(FiveCardSamples.getPairOfAces()));
+		assertTrue("This was a flush of diamonds"
+				,r.hasFlush(FiveCardSamples.getFlushDiamondNotStraight()));
+		assertTrue("This was a flush of heart"
+				,r.hasFlush(FiveCardSamples.getFlushHeartNotStraight()));
 	}
 	
 	/**
@@ -101,118 +99,45 @@ public class TestFiveCardRanking extends TestCase{
 	 */
 	public void testHasStraight(){
 		FiveCardRanking r = new FiveCardRanking();
-
-		//Hands to test
-		FiveCardHand lowNumStraight = new FiveCardHand();
-		FiveCardHand highNumStraight = new FiveCardHand();
-		FiveCardHand wrapAroundFalseStraight = new FiveCardHand();
-		FiveCardHand notAStraight = new FiveCardHand();
-		
-		lowNumStraight.addCard(new Card(CardNumber.ACE, CardSuit.CLUB));
-		lowNumStraight.addCard(new Card(CardNumber.TWO, CardSuit.DIAMOND));
-		lowNumStraight.addCard(new Card(CardNumber.THREE, CardSuit.HEART));
-		lowNumStraight.addCard(new Card(CardNumber.FOUR, CardSuit.SPADE));
-		lowNumStraight.addCard(new Card(CardNumber.FIVE, CardSuit.SPADE));
-		
-		highNumStraight.addCard(new Card(CardNumber.ACE, CardSuit.CLUB));
-		highNumStraight.addCard(new Card(CardNumber.KING, CardSuit.DIAMOND));
-		highNumStraight.addCard(new Card(CardNumber.QUEEN, CardSuit.HEART));
-		highNumStraight.addCard(new Card(CardNumber.JACK, CardSuit.SPADE));
-		highNumStraight.addCard(new Card(CardNumber.TEN, CardSuit.SPADE));
-		
-		wrapAroundFalseStraight.addCard(new Card(CardNumber.ACE, CardSuit.CLUB));
-		wrapAroundFalseStraight.addCard(new Card(CardNumber.KING, CardSuit.DIAMOND));
-		wrapAroundFalseStraight.addCard(new Card(CardNumber.QUEEN, CardSuit.HEART));
-		wrapAroundFalseStraight.addCard(new Card(CardNumber.JACK, CardSuit.SPADE));
-		wrapAroundFalseStraight.addCard(new Card(CardNumber.TWO, CardSuit.SPADE));
-		
-		notAStraight.addCard(new Card(CardNumber.ACE, CardSuit.CLUB));
-		notAStraight.addCard(new Card(CardNumber.KING, CardSuit.DIAMOND));
-		notAStraight.addCard(new Card(CardNumber.QUEEN, CardSuit.HEART));
-		notAStraight.addCard(new Card(CardNumber.JACK, CardSuit.SPADE));
-		notAStraight.addCard(new Card(CardNumber.EIGHT, CardSuit.SPADE));
-		
-		assertTrue("Ace as high not deemeed straight",r.hasStraight(highNumStraight));
-		assertTrue("Ace as low not deemeed straight",r.hasStraight(lowNumStraight));
-		assertFalse("Wrap around straight deemeed a straight",
-				r.hasStraight(wrapAroundFalseStraight));
-		assertFalse("Not a straight deemeed a straight",
-				r.hasStraight(notAStraight));
+		assertTrue("Ace as high not deemeed straight"
+				,r.hasStraight(FiveCardSamples.getStraightHighNum()));
+		assertTrue("Ace as low not deemeed straight"
+				,r.hasStraight(FiveCardSamples.getStraightHighNum()));
+		assertFalse("Wrap around straight deemeed a straight"
+				,r.hasStraight(FiveCardSamples.getStraightNOTWrapAroundFalse()));
+		assertFalse("Not a straight deemeed a straight"
+				,r.hasStraight(FiveCardSamples.getFourOfAKindAceSequentialHavingKing()));
 	}
 	
 	//TODO override assert logic so that logging output is more verbose for better debugging.
 	public void testHasThreeOfAKind(){
 		FiveCardRanking r = new FiveCardRanking();
-		ArrayList<Card> cards = new ArrayList<Card>();
-		
-		cards.add(new Card(CardNumber.ACE, CardSuit.CLUB));
-		cards.add(new Card(CardNumber.ACE, CardSuit.DIAMOND));
-		cards.add(new Card(CardNumber.FIVE, CardSuit.HEART));
-		cards.add(new Card(CardNumber.FIVE, CardSuit.SPADE));
-		cards.add(new Card(CardNumber.FOUR, CardSuit.SPADE));
-		
-		//Two Pair
-		FiveCardHand hand = new FiveCardHand(cards);
 		assertFalse("The Ranking System inaccurately said this had three of a kind"
-				+hand,r.hasThreeOfAKind(hand));
-		
-		//One Pair
-		hand.removeCard(new Card(CardNumber.ACE, CardSuit.CLUB));
-		hand.addCard(new Card(CardNumber.TWO, CardSuit.CLUB));
-		assertFalse("The Ranking System inaccurately said this had three of a kind"+hand,r.hasThreeOfAKind(hand));
-		
-		//Three of a kind  (because can have two matches across one)
-		hand.removeCard(new Card(CardNumber.ACE, CardSuit.DIAMOND));
-		hand.addCard(new Card(CardNumber.FIVE, CardSuit.DIAMOND));
-		assertTrue("The Ranking System did not see three of a kind."+hand,r.hasThreeOfAKind(hand));
-
+				,r.hasThreeOfAKind(FiveCardSamples.getTwoPairAA55()));
+		assertFalse("The Ranking System inaccurately said this had three of a kind"
+				,r.hasThreeOfAKind(FiveCardSamples.getPairOfAces()));
+		assertTrue("The Ranking System did not see three of a kind."
+				,r.hasThreeOfAKind(FiveCardSamples.getThreeOfAKind7()));
 		//Having four of a kind also means you have three of a kind
-		hand.removeCard(new Card(CardNumber.TWO, CardSuit.CLUB));
-		hand.addCard(new Card(CardNumber.FIVE, CardSuit.CLUB));
-		assertTrue("The Ranking System did not see three of a kind."+hand,r.hasThreeOfAKind(hand));
+		assertTrue("The Ranking System did not see three of a kind."
+				,r.hasThreeOfAKind(FiveCardSamples.getFourOfAKindAceSequentialHavingKing()));
 	}
 	
 	public void testHasTwoPair(){
 		FiveCardRanking r = new FiveCardRanking();
-		ArrayList<Card> cards = new ArrayList<Card>();
-		
-		cards.add(new Card(CardNumber.ACE, CardSuit.CLUB));
-		cards.add(new Card(CardNumber.ACE, CardSuit.DIAMOND));
-		cards.add(new Card(CardNumber.FIVE, CardSuit.HEART));
-		cards.add(new Card(CardNumber.FIVE, CardSuit.SPADE));
-		cards.add(new Card(CardNumber.FOUR, CardSuit.SPADE));
-		
-		//Two Pair
-		FiveCardHand hand = new FiveCardHand(cards);
 		assertTrue("The Ranking System inaccurately said this did not have two pairs"
-				+hand,r.hasTwoPair(hand));
-		
-		//One Pair
-		hand.removeCard(new Card(CardNumber.ACE, CardSuit.CLUB));
-		hand.addCard(new Card(CardNumber.TWO, CardSuit.CLUB));
-		assertFalse("The Ranking System inaccurately said this had two pairs"+hand,r.hasTwoPair(hand));
-		
-		//Three of a kind  (because can have two matches across one)
-		hand.removeCard(new Card(CardNumber.ACE, CardSuit.DIAMOND));
-		hand.addCard(new Card(CardNumber.FIVE, CardSuit.DIAMOND));
-		assertFalse("The Ranking System inaccurately though 3 of a kind was two pair"+hand,r.hasTwoPair(hand));
+				,r.hasTwoPair(FiveCardSamples.getTwoPairAA55()));
+		assertFalse("The Ranking System inaccurately said this had two pairs"
+				,r.hasTwoPair(FiveCardSamples.getPairOfAces()));
+		assertFalse("The Ranking System inaccurately though 3 of a kind was two pair"
+				,r.hasTwoPair(FiveCardSamples.getThreeOfAKind7()));
 	}
 	
 	public void testHasPair(){
 		FiveCardRanking r = new FiveCardRanking();
-		ArrayList<Card> cards = new ArrayList<Card>();
-		
-		cards.add(new Card(CardNumber.ACE, CardSuit.CLUB));
-		cards.add(new Card(CardNumber.ACE, CardSuit.DIAMOND));
-		cards.add(new Card(CardNumber.SEVEN, CardSuit.HEART));
-		cards.add(new Card(CardNumber.FIVE, CardSuit.SPADE));
-		cards.add(new Card(CardNumber.FOUR, CardSuit.SPADE));
-		
-		FiveCardHand hand = new FiveCardHand(cards);
-		assertTrue("The Ranking System inaccurately said this did not have a pair: "+hand,r.hasPair(hand));
-		
-		hand.removeCard(new Card(CardNumber.ACE, CardSuit.CLUB));
-		hand.addCard(new Card(CardNumber.TWO, CardSuit.CLUB));
-		assertFalse("The Ranking System inaccurately said this had a pair"+hand,r.hasPair(hand));
+		assertTrue("The Ranking System inaccurately said this did not have a pair: "
+				,r.hasPair(FiveCardSamples.getPairOfAces()));
+		assertFalse("The Ranking System inaccurately said this had a pair"
+				,r.hasPair(FiveCardSamples.getEightHigh()));
 	}
 }

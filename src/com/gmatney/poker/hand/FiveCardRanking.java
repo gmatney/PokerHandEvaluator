@@ -24,24 +24,69 @@ public class FiveCardRanking implements Ranking {
 
 	@Override
 	public int getHandValue(Hand hand) {
-		// TODO Auto-generated method stub
+		// TODO Create class to generate weight of hand, to be able to tell winner in tie.  
 		return 0;
 	}
 
 	@Override
 	public Rank getHandRank(Hand hand) {
-		// TODO Auto-generated method stub
+		//if(hasRoyalFlush)
 		return null;
 	}
 	
+	/**
+	 * Return if a hand has hand with cards of all the same suit, and in sequential order
+	 * And is Ace High
+	 * @param handToCheck
+	 * @return
+	 */
 	public boolean hasRoyalFlush(Hand handToCheck){
-	
+		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
+		log.debug("hasRoyalFlush(hand = "+hand+")");
+		Hand straightFlush = getStraightFlush(hand);
+		if(straightFlush != null
+			&& straightFlush.getNumberValues().contains(CardNumber.ACE)
+			&& straightFlush.getNumberValues().contains(CardNumber.KING)//Make sure not Ace Low
+		){
+			return true;
+		}
 		return false;
 	}
+	/**
+	 * Return if a hand has hand with cards of all the same suit, and in sequential order 
+	 * @param handToCheck
+	 * @return
+	 */
 	public boolean hasStraightFlush(Hand handToCheck){
-	
-		return false;
+		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
+		log.debug("hasStraightFlush(hand = "+hand+")");
+		if(getStraightFlush(hand)==null){
+			return false;
+		}
+		return true;
 	}
+	/**
+	 * If the hand has a straight flush, return the straight flush 
+	 * otherwise, return null
+	 * @param handToCheck
+	 * @return
+	 */
+	private Hand getStraightFlush(Hand handToCheck){
+		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
+		log.debug("getStraightFlush(hand = "+hand+")");
+		Hand subHandThatIsStraight = getStraight(hand);
+		if(subHandThatIsStraight == null){
+			return null;
+		}
+		if(!hasFlush(subHandThatIsStraight)){
+			return null;
+		}
+		return subHandThatIsStraight;
+	}
+	
+	/**
+	 * Find out if hand has four cards with the same number value.
+	 */
 	public boolean hasFourOfAKind(Hand handToCheck){
 		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
 		log.debug("hasFourOfAKind(hand = "+hand+")");
@@ -65,9 +110,29 @@ public class FiveCardRanking implements Ranking {
 		
 		return false;
 	}
+	/**
+	 * Find out if has three of a kind and a pair
+	 * @param handToCheck
+	 * @return
+	 */
 	public boolean hasFullHouse(Hand handToCheck){
+		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
+		log.debug("hasFullHouse(hand = "+hand+")");
 		
-		return false;
+		Hand threeOfAKind = getThreeOfAKind(hand);
+		if(threeOfAKind == null){
+			return false;
+		}
+		log.debug("Three of a kind = "+threeOfAKind);
+		hand.removeHand(threeOfAKind);
+		Hand thePair = getPair(hand);
+		if(thePair == null){
+			return false;
+		}
+		log.debug("The Pair = "+thePair);
+
+		log.debug("returning true");
+		return true;
 	}
 	
 	/**
@@ -124,42 +189,62 @@ public class FiveCardRanking implements Ranking {
 	public boolean hasStraight(Hand handToCheck){
 		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
 		log.debug("hasStraight(hand = "+hand+")");
-		if(hand == null){
-			log.debug("Hand was null. Returning false");
+		if(getStraight(hand)==null){
 			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * If there are five cards with sequential number values, return all* cards with those values from the hand
+	 * otherwise, return null
+	 * @param hand
+	 * @return
+	 */
+	private Hand getStraight(Hand handToCheck){
+		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
+		log.debug("getStraight(hand = "+hand+")");
+		if(hand == null){
+			log.debug("Hand was null. Returning null");
+			return null;
 		}
 		ArrayList<Card> cards = hand.getCards();
 		if(cards == null){
-			log.debug("The ArrayList<Card> inside the Hand Object was NULL. Returning false");
-			return false;
+			log.debug("The ArrayList<Card> inside the Hand Object was NULL. Returning null");
+			return null;
 		}
 		log.debug("Number of cards in Hand: "+cards.size());
 		Set<CardNumber> set = new HashSet<CardNumber>(hand.getNumberValues());
+		if(set.size()<5){
+			log.debug("Only "+set.size()+" unique numbers");
+			return null;
+		}
 		List<CardNumber> sorted = CollectionHelper.asSortedList(set);
 		
-		int numberInSequence=0;
+		Hand numberInSequence = new FiveCardHand();
 		if(sorted.size()>1){
-			numberInSequence=1;
-			//Inch worm a long
+			//Inch worm a long, adding hands as this will handle more than 5 cards
+			numberInSequence.addHand(hand.getSubHandHavingNumber(sorted.get(0)));
 			for(int i=1; i<sorted.size();i++){
 				if(CardUtil.areCardNumbersSequential(sorted.get(i-1),sorted.get(i))){
-					numberInSequence++;
+					numberInSequence.addHand(hand.getSubHandHavingNumber(sorted.get(i)));
 				}
 				else{
-					numberInSequence=1;
+					numberInSequence = hand.getSubHandHavingNumber(sorted.get(i));
 				}
 			}
 			 //Check wrap around, (example: Ace)
 			if(CardUtil.areCardNumbersSequential(sorted.get(0),sorted.get(sorted.size()-1))){
-				numberInSequence++;
+				numberInSequence.addHand(hand.getSubHandHavingNumber(sorted.get(sorted.size()-1)));
 			}
 		}
-		log.debug("Number of cards in sequence: "+numberInSequence);
-		if(numberInSequence>4){
-			return true;
+		log.debug("Number of cards in sequence: "+numberInSequence.getCards().size());
+		if(numberInSequence.getCards().size()>4){
+			return numberInSequence;
 		}
-		return false;
+		return null;
 	}
+	
 	
 	/**
 	 * Determines whether a hand has three cards with the same number value
@@ -169,14 +254,31 @@ public class FiveCardRanking implements Ranking {
 	public boolean hasThreeOfAKind(Hand handToCheck){
 		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
 		log.debug("hasThreeOfAKind(hand = "+hand+")");
+		if(getThreeOfAKind(hand)!=null){
+			return true;
+		}
+		
+		return false;
+
+	}
+	
+	/**
+	 * If there is three of a kind return the number which there are three of
+	 * otherwise, return null
+	 * @param hand
+	 * @return
+	 */
+	private Hand getThreeOfAKind(Hand handToCheck){
+		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
+		log.debug("getThreeOfAKind(hand = "+hand+")");
 		if(hand == null){
-			log.debug("Hand was null. Returning false");
-			return false;
+			log.debug("Hand was null. Returning null");
+			return null;
 		}
 		ArrayList<Card> cards = hand.getCards();
 		if(cards == null){
-			log.debug("The ArrayList<Card> inside the Hand Object was NULL. Returning false");
-			return false;
+			log.debug("The ArrayList<Card> inside the Hand Object was NULL. Returning null");
+			return null;
 		}
 		log.debug("Number of cards in Hand: "+cards.size());
 		
@@ -186,12 +288,21 @@ public class FiveCardRanking implements Ranking {
 			//See how many of this number there are 
 			int n = Collections.frequency(hand.getNumberValues(),num);
 			log.trace("There are "+n+" '"+num+"'s");
-			if(n>2){return true;}
-		}
-		
-		return false;
+			if(n>2){
+				FiveCardHand h = new FiveCardHand();
+				for (Card c : hand.getCards()){
+					if(c.getNumber().equals(num) ){
+						h.addCard(c);
+					}
+				}
+				return h;
+
+			}
+		}		
+		return null;
 	}
 	
+	//TODO think about if having four of a kind is also considered two pair
 	/**
 	 * Determines whether a hand has two sets of two cards with the same number value
 	 * @param handToCheck
@@ -199,55 +310,20 @@ public class FiveCardRanking implements Ranking {
 	 */
 	public boolean hasTwoPair(Hand handToCheck){
 		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
-		boolean foundFirstPair = false;
-		log.debug("hasTwoPair(hand = "+hand+")");
-		if(hand == null){
-			log.debug("Hand was null. Returning false");
+		Hand firstPair = getPair(hand);
+		if(firstPair == null){
 			return false;
 		}
-		ArrayList<Card> cards = hand.getCards();
-		if(cards == null){
-			log.debug("The ArrayList<Card> inside the Hand Object was NULL. Returning false");
+		log.debug("First Pair = "+firstPair);
+		hand.removeHand(firstPair);
+		Hand secondPair = getPair(hand);
+		if(secondPair == null){
 			return false;
 		}
-		log.debug("Number of cards in Hand: "+cards.size());
-		for (int i =0; i< cards.size(); i++){
-			Card c1= cards.remove(0);
-			if(i>0){i--;} //Update index
-			for (int j = 0; j<cards.size()&&!foundFirstPair; j++){
-				log.trace("PairSearch1: Are '"+c1.getShortName()+"' and '"
-						+cards.get(j).getShortName()+"' a pair?");
-				if(c1.getNumber().equals(cards.get(j).getNumber())){
-					log.trace("\tYes!");
-					//Found one pair
-					foundFirstPair = true;
-					cards.remove(0);//Remove card to not include in pairing any more
-					if(i>0){i--;}if(j>0){j--;}//Update indexes;
-					log.debug("Found first Pair, looking for Second now");
-				}
-				log.trace("\tNo.!");
-			}
-			if(foundFirstPair){
-				break;
-			}
-		}
-		for (int i =0; i< cards.size(); i++){
-			Card c1= cards.remove(0);
-			if(i>0){i--;} //Update index
-			for (Card c2: cards){
-				log.trace("PairSearch2:Are '"+c1.getShortName()+"' and '"+c2.getShortName()+"' a pair?");
-				if(c1.getNumber().equals(c2.getNumber())){
-					log.trace("\tYes!");
-					log.debug("Two pairs found!");
-					cards.remove(0);
-					return true;
-				}
-				log.trace("\tNo.!");
-			}
-		}
-		
-		log.debug("returning false");
-		return false;
+		log.debug("Second Pair = "+secondPair);
+
+		log.debug("returning true");
+		return true;
 	}
 	/**
 	 * Determines whether a hand has two cards with the same number value
@@ -257,14 +333,29 @@ public class FiveCardRanking implements Ranking {
 	public boolean hasPair(Hand handToCheck){
 		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
 		log.debug("hasPair(hand = "+hand+")");
+		if(getPair(hand)!=null){
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * If there is three of a kind return the number which there are three of
+	 * otherwise, return null
+	 * @param hand
+	 * @return
+	 */
+	private Hand getPair(Hand handToCheck){
+		Hand hand = new FiveCardHand(handToCheck); //Make copy of the object so original doesn't get modified
+		log.debug("getPair(hand = "+hand+")");
 		if(hand == null){
-			log.debug("Hand was null. Returning false");
-			return false;
+			log.debug("Hand was null. Returning null");
+			return null;
 		}
 		ArrayList<Card> cards = hand.getCards();
 		if(cards == null){
-			log.debug("The ArrayList<Card> inside the Hand Object was NULL. Returning false");
-			return false;
+			log.debug("The ArrayList<Card> inside the Hand Object was NULL. Returning null");
+			return null;
 		}
 		log.debug("Number of cards in Hand: "+cards.size());
 		for (int i =0; i< cards.size(); i++){
@@ -275,17 +366,18 @@ public class FiveCardRanking implements Ranking {
 				if(c1.getNumber().equals(c2.getNumber())){
 					log.trace("\tYes!");
 					log.debug("A pairs found!");
-					return true;
+					ArrayList<Card> ca = new ArrayList<Card>();
+					ca.add(c1);
+					ca.add(c2);
+					return new FiveCardHand(ca);
 				}
 				log.trace("\tNo.!");
 				
 			}
 		}
-		log.debug("returning false");
-		return false;
+		log.debug("returning null");
+		return null;
 	}
-
-	
 	
 	
 
