@@ -4,6 +4,6 @@ import junit.framework.TestCase;
 
 public class TestCard extends TestCase {
 	
-	//STUB
+	//STUB for when card becomes more advanced.
 
 }

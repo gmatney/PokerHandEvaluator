@@ -10,5 +10,6 @@ public enum Rank {
 	THREE_OF_A_KIND,
 	TWO_PAIR,
 	PAIR,
-	HIGH_CARD	
+	HIGH_CARD,
+	CHEATER,
 }
